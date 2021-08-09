@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            npm install --prefix ./frontend
+            npm install --prefix frontend
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -58,7 +58,7 @@ jobs:
       - run:
           name: Back-end build
           command: |
-            npm install --prefix ./backend
+            npm install --prefix backend
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -71,10 +71,8 @@ jobs:
       - restore_cache:
           keys: [frontend-test]
       - run:
-          command: cd frontend
-      - run:
           name: Test frontend
-          command: npm test
+          command: npm test --prefix frontend
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-test
@@ -87,10 +85,8 @@ jobs:
       - restore_cache:
           keys: [backend-test]
       - run:
-          command: cd backend
-      - run:
           name: Test backend
-          command: npm test
+          command: npm test --prefix frontend
       - save_cache:
           paths: [backend/node_modules]
           key: backend-test
