@@ -14,7 +14,7 @@ commands:
             aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    parameters:
+    # parameters:
     # Add parameter here
     steps:
       - run:
@@ -206,42 +206,43 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
-run-migrations:
-  docker:
-    - image: circleci/node:13.8.0
-  steps:
-    - checkout
-    - run:
-        name: install awscli
-        command: |
-          sudo apt-get -y -qq update
-          sudo apt-get -qq install awscli
-          sudo apt-get -y -qq install python3
-    - run:
-        name: Run migrations
-        no_output_timeout: 10m
-        command: |
-          cd backend
-          export
-          npm install
-          npm run build
-          touch mig_results.txt
-          npm run migrations > mig_results.txt
-          cat mig_results.txt
-    - run:
-        name: save migrations
-        command: |
-          cd backend
-          if grep "has been executed successfully" mig_results.txt
-          then
-          echo "DB migration was successful"
-          curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "true" https://api.memstash.io/values/migration-${CIRCLE_WORKFLOW_ID:0:7}
-          else
-          echo "DB migration has failed"
-          curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "false" https://api.memstash.io/values/migration-${CIRCLE_WORKFLOW_ID:0:7}
-          fi
-    - revert-migrations
-    - destroy-environment
+
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: install awscli
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get -qq install awscli
+            sudo apt-get -y -qq install python3
+      - run:
+          name: Run migrations
+          no_output_timeout: 10m
+          command: |
+            cd backend
+            export
+            npm install
+            npm run build
+            touch mig_results.txt
+            npm run migrations > mig_results.txt
+            cat mig_results.txt
+      - run:
+          name: save migrations
+          command: |
+            cd backend
+            if grep "has been executed successfully" mig_results.txt
+            then
+            echo "DB migration was successful"
+            curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "true" https://api.memstash.io/values/migration-${CIRCLE_WORKFLOW_ID:0:7}
+            else
+            echo "DB migration has failed"
+            curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "false" https://api.memstash.io/values/migration-${CIRCLE_WORKFLOW_ID:0:7}
+            fi
+      - revert-migrations
+      - destroy-environment
 
   deploy-frontend:
     docker:
