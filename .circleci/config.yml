@@ -41,6 +41,9 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
+          name: list everything
+          command: ls
+      - run:
           name: Build front-end
           working_directory: ./frontend
           command: |
