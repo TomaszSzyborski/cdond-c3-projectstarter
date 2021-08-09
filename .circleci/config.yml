@@ -166,7 +166,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-            -
+            
 #   configure-infrastructure:
 #     docker:
 #       # Docker image here that supports Ansible
