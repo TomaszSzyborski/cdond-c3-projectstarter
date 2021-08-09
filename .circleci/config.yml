@@ -69,7 +69,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-test]
+          keys: [frontend-build]
       - run:
           name: Test frontend
           command: npm test --prefix frontend
@@ -83,7 +83,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-test]
+          keys: [backend-build]
       - run:
           name: Test backend
           command: npm test --prefix frontend
