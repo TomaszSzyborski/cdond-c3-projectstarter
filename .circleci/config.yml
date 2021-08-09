@@ -97,10 +97,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-test]
+          keys: [frontend-build]
       - run:
           name: Audit frontend
-          command: npm audit --audit-level=critical --prefix frontend
+          command: cd frontend && npm audit --audit-level=critical
       - save_cache:
           paths: [frontend/node_modules]
           key: scan-frontend
@@ -111,10 +111,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-test]
+          keys: [backend-build]
       - run:
           name: Audit backend
-          command: npm audit --audit-level=critical --prefix backend
+          command: cd backend && npm audit --audit-level=critical
       - save_cache:
           paths: [backend/node_modules]
           key: scan-backend
