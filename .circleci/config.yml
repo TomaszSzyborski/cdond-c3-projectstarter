@@ -69,15 +69,15 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [test-frontend]
+          keys: [frontend-test]
       - run:
           name: Test frontend
           working_directory: frontend
           command: |
-            npm test
+            npm run test
       - save_cache:
           paths: [frontend/node_modules]
-          key: test-frontend
+          key: frontend-test
 
   test-backend:
     docker:
@@ -85,17 +85,17 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [test-backend]
+          keys: [backend-test]
       - run:
           name: Test backend
           working_directory: backend
           command: |
-            npm test
+            npm run test
       - save_cache:
           paths: [backend/node_modules]
-          key: test-backend
+          key: backend-test
 
-            #   scan-frontend:
+#   scan-frontend:
 #     docker:
 #       # Docker image here
 #     steps:
