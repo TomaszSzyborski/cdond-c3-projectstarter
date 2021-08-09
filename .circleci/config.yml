@@ -86,7 +86,7 @@ jobs:
           keys: [backend-build]
       - run:
           name: Test backend
-          command: npm test --prefix frontend
+          command: npm test --prefix backend
       - save_cache:
           paths: [backend/node_modules]
           key: backend-test
