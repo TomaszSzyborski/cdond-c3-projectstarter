@@ -125,18 +125,18 @@ jobs:
           paths: [backend/node_modules]
           key: scan-backend
 
-  my-bucket:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          command: |
-            aws cloudformation deploy \
-            --template-file .circleci/files/cloudfront.yml \
-            --stack-name production-distro \
-            --parameter-overrides WorkflowID="piiakn7dhzt7jce1i4gtmpe1bb4yoj" \
-            --tags project=udapeople
+#  my-bucket:
+#    docker:
+#      - image: amazon/aws-cli
+#    steps:
+#      - checkout
+#      - run:
+#          command: |
+#            aws cloudformation deploy \
+#            --template-file .circleci/files/cloudfront.yml \
+#            --stack-name production-distro \
+#            --parameter-overrides WorkflowID="piiakn7dhzt7jce1i4gtmpe1bb4yoj" \
+#            --tags project=udapeople
 
   deploy-infrastructure:
     docker:
@@ -148,17 +148,19 @@ jobs:
           command: yum install -y tar gzip
       - run:
           name: Ensure back-end infrastructure exists
+          working_directory: ./.circleci/files
           command: |
             aws cloudformation deploy \
-            --template-file .circleci/files/backend.yml \
+            --template-file backend.yml \
             --tags project=udapeople-backend \
             --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Ensure front-end infrastructure exist
+          working_directory: ./.circleci/files
           command: |
             aws cloudformation deploy \
-            --template-file .circleci/files/frontend.yml \
+            --template-file frontend.yml \
             --tags project=udapeople-frontend \
             --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
@@ -428,7 +430,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - my-bucket
+#      - my-bucket
       - build-frontend
       - build-backend
 #      - test-frontend:
