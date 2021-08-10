@@ -9,9 +9,9 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
-            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-            aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
+            aws cloudformation delete-stack --stack-name udapeople-frontend-piiakn7dhzt7jce1i4gtmpe1bb4yoj
+            aws cloudformation delete-stack --stack-name udapeople-backend-piiakn7dhzt7jce1i4gtmpe1bb4yoj
+            aws s3 rb s3://udapeople-piiakn7dhzt7jce1i4gtmpe1bb4yoj --force
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     # parameters:
@@ -23,7 +23,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request GET https://api.memstash.io/values/migration-${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request GET https://api.memstash.io/values/migration-piiakn7dhzt7jce1i4gtmpe1bb4yoj)
             if [[ $SUCCESS == true ]]
             then
             cd ~/project/backend
@@ -152,16 +152,16 @@ jobs:
             aws cloudformation deploy \
             --template .circleci/files/backend.yml \
             --tags project=udapeople-backend \
-            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            --stack-name "udapeople-backend-piiakn7dhzt7jce1i4gtmpe1bb4yoj" \
+            --parameter-overrides ID="piiakn7dhzt7jce1i4gtmpe1bb4yoj"
       - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
             --template .circleci/files/frontend.yml \
             --tags project=udapeople-frontend \
-            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            --stack-name "udapeople-frontend-piiakn7dhzt7jce1i4gtmpe1bb4yoj" \
+            --parameter-overrides ID="piiakn7dhzt7jce1i4gtmpe1bb4yoj"
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -249,10 +249,10 @@ jobs:
             if grep "has been executed successfully" mig_results.txt
             then
             echo "DB migration was successful"
-            curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "true" https://api.memstash.io/values/migration-${CIRCLE_WORKFLOW_ID:0:7}
+            curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "true" https://api.memstash.io/values/migration-piiakn7dhzt7jce1i4gtmpe1bb4yoj
             else
             echo "DB migration has failed"
-            curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "false" https://api.memstash.io/values/migration-${CIRCLE_WORKFLOW_ID:0:7}
+            curl -H "Content-Type: text/plain" -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" --request PUT --data "false" https://api.memstash.io/values/migration-piiakn7dhzt7jce1i4gtmpe1bb4yoj
             fi
       - revert-migrations
       - destroy-environment
@@ -282,7 +282,7 @@ jobs:
             cd frontend
             npm install
             npm run build
-            aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws s3 cp ./dist s3://udapeople-piiakn7dhzt7jce1i4gtmpe1bb4yoj --recursive
             npm install webpack-dev-server -g
       - revert-migrations
       - destroy-environment
@@ -359,7 +359,7 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
-            FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
+            FRONTEND_URL="http://udapeople-piiakn7dhzt7jce1i4gtmpe1bb4yoj.s3-website-us-east-1.amazonaws.com/#/employees"
             echo $FRONTEND_URL
             if curl -s ${FRONTEND_URL} | grep "Welcome"
             then
@@ -397,7 +397,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name production-distro \
-            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides WorkflowID="piiakn7dhzt7jce1i4gtmpe1bb4yoj" \
             --tags project=udapeople
       #- revert-migrations
       #- destroy-environment
