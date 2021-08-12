@@ -229,6 +229,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
       - run:
           name: install awscli
           command: |
