@@ -1,4 +1,3 @@
-
 ---
 - name: Configure udapeople infrastructure
   hosts: web
