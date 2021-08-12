@@ -242,7 +242,6 @@ jobs:
           no_output_timeout: 10m
           command: |
             cd backend
-#            export
             npm install
             npm audit fix
             npm run build
