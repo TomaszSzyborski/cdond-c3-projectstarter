@@ -16,6 +16,6 @@
     TYPEORM_ENTITIES: ./src/modules/domain/**/*.entity.ts
     TYPEORM_HOST: db-udacity.cy3w3hqblmwr.eu-central-1.rds.amazonaws.com
     TYPEORM_PORT: 5432
-    TYPEORM_USERNAME: udacity
+    TYPEORM_USERNAME: postgres
     TYPEORM_PASSWORD: costamcostamszmelc
-    TYPEORM_DATABASE: db-udacity
+    TYPEORM_DATABASE: dbudacity
