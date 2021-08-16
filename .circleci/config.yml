@@ -182,7 +182,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/inventory
+            - project/.circleci/ansible/inventory.txt
       - destroy-environment
 
   configure-infrastructure:
@@ -191,7 +191,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/
+          at: ~/project
       - add_ssh_keys:
           fingerprints: ["d3:0d:11:52:96:93:38:ed:84:70:40:c3:5b:ab:0f:6d:a9:05:9a:05"]
       - run:
