@@ -180,7 +180,7 @@ jobs:
             https://api.memstash.io/values/backend_ip
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: .
+          root: ~/project
           paths:
             - .circleci/ansible/inventory
       - destroy_environment:
@@ -236,7 +236,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .
+          at: ~/project
       - run:
           name: install awscli
           command: |
