@@ -9,9 +9,9 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name udapeople-frontend-piiakn7dhzt7jce1i4gtmpe1bb4yoj
-            aws cloudformation delete-stack --stack-name udapeople-backend-piiakn7dhzt7jce1i4gtmpe1bb4yoj
-            aws s3 rb s3://udapeople-piiakn7dhzt7jce1i4gtmpe1bb4yoj --force
+            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws s3 rb s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --force
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     # parameters:
@@ -183,9 +183,7 @@ jobs:
           root: ~/project
           paths:
             - .circleci/ansible/inventory
-      - destroy_environment:
-          id: ${CIRCLE_WORKFLOW_ID:0:7}
-          when: on_fail
+      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -226,9 +224,7 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
-      - destroy_environment:
-          id: ${CIRCLE_WORKFLOW_ID:0:7}
-          when: on_fail
+      - destroy-environment
 
   run-migrations:
     docker:
