@@ -222,6 +222,7 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
+            cat backend/.env
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
@@ -246,6 +247,8 @@ jobs:
             cat .circleci/ansible/inventory.txt
             cd backend
             export
+            npm install
+            npm run build
             npm run migrations > mig_results.txt
             cat mig_results.txt
       - run:
