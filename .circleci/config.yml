@@ -245,6 +245,9 @@ jobs:
           command: |
             cat .circleci/ansible/inventory.txt
             cd backend
+            export
+            npm install
+            npm run build
             touch mig_results.txt
             npm run migrations > mig_results.txt
             cat mig_results.txt
