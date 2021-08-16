@@ -180,7 +180,7 @@ jobs:
             https://api.memstash.io/values/backend_ip
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/project
+          root: ~/
           paths:
             - .circleci/ansible/inventory
       - destroy-environment
@@ -191,7 +191,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/project
+          at: ~/
       - add_ssh_keys:
           fingerprints: ["d3:0d:11:52:96:93:38:ed:84:70:40:c3:5b:ab:0f:6d:a9:05:9a:05"]
       - run:
@@ -232,7 +232,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/project
+          at: ~/
       - run:
           name: install awscli
           command: |
@@ -440,17 +440,17 @@ workflows:
 #      - my-bucket
       - build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
+#      - test-frontend:
+#          requires: [build-frontend]
+#      - test-backend:
+#          requires: [build-backend]
+#      - scan-backend:
+#          requires: [build-backend]
+#      - scan-frontend:
+#          requires: [build-frontend]
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-#          requires: [build-backend, build-frontend]
+#          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [build-backend, build-frontend]
           filters:
             branches:
               only: [master]
