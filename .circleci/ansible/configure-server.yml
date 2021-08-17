@@ -19,3 +19,5 @@
     TYPEORM_USERNAME: postgres
     TYPEORM_PASSWORD: szmelcszmelc
     TYPEORM_DATABASE: udacity
+    TYPEORM_MIGRATIONS_DIR: ./src/migrations
+    TYPEORM_MIGRATIONS: ./src/migrations/*.ts
