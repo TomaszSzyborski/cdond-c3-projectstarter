@@ -66,10 +66,6 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - backend/dist
 
   test-frontend:
     docker:
@@ -160,6 +156,10 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: scan-backend
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .backend/dist
 
 #  my-bucket:
 #    docker:
