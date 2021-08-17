@@ -54,6 +54,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -64,35 +66,61 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - backend/dist
 
   test-frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: Test frontend
-          command: |
-            cd frontend
-            npm test
+          name: Install junit coverage reporter
+          working_directory: ./frontend
+          command: npm install --save-dev jest-junit
+      - run:
+          name: Run tests with JUnit as reporter
+          working_directory: ./frontend
+          command: npm test -- --ci --runInBand --reporters=default --reporters=jest-junit && pwd && ls -la /tmp
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: ./test_results
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-test
+      - store_test_results:
+          path: ./frontend/test_results
+      - store_artifacts:
+          path: ./frontend/test_results
 
   test-backend:
     docker:
     - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Test backend
-          command: |
-            cd backend
-            npm test
+          name: Install junit coverage reporter
+          working_directory: ./backend
+          command: npm install --save-dev jest-junit
+      - run:
+          name: Run tests with JUnit as reporter
+          working_directory: ./backend
+          command: npm test -- --ci --runInBand --reporters=default --reporters=jest-junit && pwd
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: ./test_results
+      - store_test_results:
+          path: ./backend/test_results
+      - store_artifacts:
+          path: ./backend/test_results
       - save_cache:
           paths: [backend/node_modules]
           key: backend-test
@@ -102,6 +130,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
       - restore_cache:
           keys: [frontend-build]
       - run:
@@ -118,6 +148,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -233,7 +265,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/
+          at: ~/project
       - restore_cache:
           keys: [ scan-backend ]
       - run:
@@ -249,8 +281,6 @@ jobs:
             cat .circleci/ansible/inventory.txt
             cd backend
             export
-            npm audit fix --audit-level=critical --force
-            npm install
             npm run build
             npm run migrations > mig_results.txt
             cat mig_results.txt
