@@ -331,9 +331,9 @@ jobs:
           name: Rebuild frontend
           command: |
             cd frontend
-            npm install
-            npm install webpack-dev-server -g
-            npm run build
+            sudo npm install
+            sudo npm install webpack-dev-server -g
+            sudo npm run build
       - run:
           name: Deploy frontend objects
           command: |
