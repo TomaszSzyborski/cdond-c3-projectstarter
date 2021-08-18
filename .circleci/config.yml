@@ -314,11 +314,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
-          command: |
-            sudo apt-get update
-            sudo apt -y install awscli --fix-missing
-            sudo apt -y install tar gzip --fix-missing
+        name: Install AWS CLI dependencies
+        working_directory: /tmp
+        command: |
+          sudo apt-get update && sudo apt-get install -yy less
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
       - run:
           name: Get backend url
           command: |
@@ -331,8 +333,9 @@ jobs:
           name: Rebuild frontend
           command: |
             cd frontend
-            sudo npm install
-            sudo npm run build
+            sudo npm install webpack-dev-server -g
+            npm install
+            npm run build
       - run:
           name: Deploy frontend objects
           command: |
