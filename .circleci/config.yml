@@ -310,14 +310,9 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: sleavely/node-awscli:14.0
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            sudo apt -y install awscli
-            sudo apt -y install tar gzip
       - run:
           name: Get backend url
           command: |
