@@ -313,6 +313,10 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/project
+      - restore_cache:
+          keys: [ scan-frontend ]
       - run:
           name: Install AWS CLI dependencies
           command: |
@@ -326,14 +330,10 @@ jobs:
             echo API_URL="http://${BACKEND_IP}:3030" >> "frontend/.env"
             echo "${API_URL}"
       - run:
-          name: Install webpack
-          command: sudo npm install webpack-dev-server -g
-      - run:
           name: Rebuild frontend
           command: |
             cd frontend
             npm install
-            npm audit fix --force
             npm run build
       - run:
           name: Deploy frontend objects
