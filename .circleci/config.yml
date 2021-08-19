@@ -333,6 +333,7 @@ jobs:
           command: |
             cd frontend
             npm install
+            npm audit fix --force
             npm run build
       - run:
           name: Deploy frontend objects
