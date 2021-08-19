@@ -401,8 +401,22 @@ jobs:
             apk add --update tar gzip curl
             apk add --update curl nodejs npm
             pip install awscli
-      - run:
-          command: exit 1
+  - run:
+      name: Frontend smoke test.
+      command: |
+        FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
+        echo $FRONTEND_URL
+        if curl -s ${FRONTEND_URL} | grep "Welcome"
+        then
+        return 0
+        echo "Frontend smoke test OK"
+        else
+        return 1
+        echo "Front end smoke test failed"
+        fi
+      - revert-migrations
+      - destroy-environment
+
 
 #      - run:
 #          name: Backend smoke test.
