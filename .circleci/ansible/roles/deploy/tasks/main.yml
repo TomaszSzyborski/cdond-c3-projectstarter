@@ -32,7 +32,7 @@
     production: yes
     state: present
 
-- name: " update dependancies"
+- name: " update dependencies"
   become: true
   shell: |
     curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -

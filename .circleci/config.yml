@@ -304,6 +304,10 @@ jobs:
             fi
       - revert-migrations
       - destroy-environment
+      - persist_to_workspace:
+          root: ~/
+            paths:
+              - project
 
   deploy-frontend:
     docker:
@@ -339,6 +343,10 @@ jobs:
             aws s3 cp ./dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - revert-migrations
       - destroy-environment
+      - persist_to_workspace:
+          root: ~/
+            paths:
+              - project
 
   deploy-backend:
     docker:
@@ -386,6 +394,10 @@ jobs:
             ansible-playbook -i inventory.txt deploy-backend.yml --ssh-common-args='-o StrictHostKeyChecking=no'
       - revert-migrations
       - destroy-environment
+      - persist_to_workspace:
+          root: ~/
+            paths:
+              - project
 
   smoke-test:
     docker:
