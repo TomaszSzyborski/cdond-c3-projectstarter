@@ -1,36 +1,78 @@
 ---
-- name: "Creates backend app directory"
-  file:
-    path: ~/backend
-    state: directory
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
 
-- name: "Copy compiled backend app"
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: "install dependencies."
+  become: yes
+  apt:
+    name: ["nodejs", "npm"]
+    state: latest
+    update_cache: yes
+
+- name: "install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: "install typescript"
+  become: yes
+  npm:
+    name: typescript
+    global: yes
+    production: yes
+    state: present
+
+- name: " update dependancies"
+  become: true
+  shell: |
+    curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    apt-get install -y nodejs
+    npm install --save glob
+
+- name: "Copy backend build to server"
+  become: yes
+  unarchive:
+    src:  ~/project/backend.tar.gz
+    dest: /home/ubuntu/
+    owner: ubuntu
+
+- name: "Copy package.json to server"
+  become: yes
   copy:
-    src: dist.zip
-    dest: "~/backend/dist.zip"
+    src: ~/project/backend/package.json
+    dest: /home/ubuntu/
+    owner: ubuntu
 
-- name: "Unzip backend files to correct directory"
+- name: Build
+  become: true
   shell: |
-    cd ~/backend
-    unzip dist.zip
-    rm -rf dist.zip
-
-- name: "Install dependencies for project"
-  shell: |
-    cd ~/backend
+    cd /home/ubuntu/backend
     npm install
+    npm fund
+    npm run build
 
-- name: "Executing node"
+- name: "export .env"
+  become: yes
   shell: |
-    export
-    cd ~/backend
-    pm2 start main.js
-  register: execute_node
-
-- name: print message
-  debug:
-    msg: "{{ execute_node.stdout_lines }}"
-
-- name: "Configure pm2 to start as service"
+    export TYPEORM_HOST="{{ lookup('env', 'TYPEORM_HOST') }}"
+    export TYPEORM_ENTITIES="{{ lookup('env', 'TYPEORM_ENTITIES') }}"
+    export TYPEORM_USERNAME="{{ lookup('env', 'TYPEORM_USERNAME') }}"
+    export TYPEORM_PASSWORD="{{ lookup('env', 'TYPEORM_PASSWORD') }}"
+    export TYPEORM_DATABASE="{{ lookup('env', 'TYPEORM_DATABASE') }}"
+- name: Executing node
+  become: true
   shell: |
-    env PATH=$PATH:/usr/local/bin pm2 startup -u ubuntu
+    cd /home/ubuntu/backend
+    pm2 start --name backend npm -- start
+    npm run start:prod
+    pm2 ls
