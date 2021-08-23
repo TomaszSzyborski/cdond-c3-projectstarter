@@ -401,22 +401,12 @@ jobs:
             apk add --update tar gzip curl
             apk add --update curl nodejs npm
             pip install awscli
-#      - run:
-#          name: Backend smoke test.
-#          command: |
-#            BACKEND_URL=$(aws ec2 describe-instances \
-#                      --query 'Reservations[*].Instances[*].PublicIpAddress' \
-#                      --filters "Name=tag:project,Values=udapeople-backend" \
-#                      --output text)
-#            URL="http://${BACKEND_URL}:3030/api/status"
-#            echo $URL
-#            curl $URL
       - run:
           name: Frontend smoke test.
           command: |
-            FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-central-1.amazonaws.com/#/employees"
+            FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3.eu-central-1.amazonaws.com/#/employees"
             echo $FRONTEND_URL
-            if curl -s ${FRONTEND_URL} | grep "Welcome"
+            if curl -s ${FRONTEND_URL} | grep "index.html"
             then
             echo "Frontend smoke test OK"
             return 0
@@ -424,6 +414,17 @@ jobs:
             echo "Front end smoke test failed"
             return 1
             fi
+      - run:
+          name: Backend smoke test.
+          no_output_timeout: 5m
+          command: |
+            BACKEND_URL=$(aws ec2 describe-instances \
+                      --query 'Reservations[*].Instances[*].PublicIpAddress' \
+                      --filters "Name=tag:project,Values=udapeople-backend" \
+                      --output text)
+            URL="http://${BACKEND_URL}:3030/api/status"
+            echo $URL
+            curl $URL
 #      - revert-migrations
 #      - destroy-environment
 
@@ -441,7 +442,7 @@ jobs:
 #      - run:
 #          name: Frontend smoke test.
 #          command: |
-#            FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
+#            FRONTEND_URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-eu-central-1a.amazonaws.com/#/employees"
 #            echo $FRONTEND_URL
 #            if curl -s ${FRONTEND_URL} | grep "Welcome"
 #            then
@@ -467,7 +468,7 @@ jobs:
       - run:
           name: Retrieve old stack workflow ID
           command: |
-            aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --region us-east-1 --no-paginate --output text >> ./.circleci/oldworkflowid.txt
+            aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --region eu-central-1 --no-paginate --output text >> ./.circleci/oldworkflowid.txt
       - persist_to_workspace:
           root: ~/
           paths:
