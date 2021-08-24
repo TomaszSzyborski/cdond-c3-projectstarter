@@ -42,14 +42,14 @@
 - name: "Copy backend build to server"
   become: yes
   unarchive:
-    src:  ~/project/backend.tar.gz
+    src:  /home/ubuntu/project/backend.tar.gz
     dest: /home/ubuntu/
     owner: ubuntu
 
 - name: "Copy package.json to server"
   become: yes
   copy:
-    src: ~/project/backend/package.json
+    src: /home/ubuntu/project/backend/package.json
     dest: /home/ubuntu/
     owner: ubuntu
 
