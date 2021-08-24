@@ -424,8 +424,8 @@ jobs:
             URL="http://${BACKEND_URL}:3030/api/status"
             echo $URL
             curl $URL
-#      - revert-migrations
-#      - destroy-environment
+      - revert-migrations
+      - destroy-environment
 
 
 #      - run:
