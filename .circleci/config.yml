@@ -380,7 +380,9 @@ jobs:
       - run:
           name: Deploy backend
           command: |
+            echo "Root project directory"
             ls /root/project
+            echo "Home project directory"
             ls ~/project
             cd ~/project/.circleci/ansible
             echo $(curl -H "token: 003bcce3-5906-46d2-b6b2-4d87819b35af" \
