@@ -43,20 +43,20 @@
   become: yes
   unarchive:
     src:  /root/project/backend.tar.gz
-    dest: /home/ubuntu/
+    dest: /home/ubuntu/project
     owner: ubuntu
 
 - name: "Copy package.json to server"
   become: yes
   copy:
     src: /root/project/backend/package.json
-    dest: /home/ubuntu/
+    dest: /home/ubuntu/project/backend
     owner: ubuntu
 
 - name: Build
   become: true
   shell: |
-    cd /root/ubuntu/backend
+    cd /home/ubuntu/project/backend
     npm install
     npm fund
     npm run build
@@ -72,7 +72,7 @@
 - name: Executing node
   become: true
   shell: |
-    cd /root/ubuntu/backend
+    cd /home/ubuntu/project/backend
     pm2 start --name backend npm -- start
     npm run start:prod
     pm2 ls

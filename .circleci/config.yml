@@ -485,7 +485,7 @@ jobs:
 workflows:
   default:
     jobs:
-      - my-bucket
+#      - my-bucket
       - build-frontend
       - build-backend
 #      - test-frontend:
