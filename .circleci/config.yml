@@ -255,10 +255,10 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/project
-      - restore_cache:
-          keys: [ scan-backend ]
+#      - attach_workspace:
+#          at: ~/project
+#      - restore_cache:
+#          keys: [ scan-backend ]
       - run:
           name: install awscli
           command: |
