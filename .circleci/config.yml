@@ -287,10 +287,6 @@ jobs:
             cat .circleci/ansible/inventory.txt
             cd backend
             export
-            npm cache clean --force
-            npm install -D @types/node
-            sudo npm i --unsafe-perm
-            npm audit fix --audit-level=critical
             npm run build
             npm run migrations > mig_results.txt
             cat mig_results.txt
