@@ -247,6 +247,7 @@ jobs:
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             cat backend/.env
             cd .circleci/ansible
+            cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment
 
@@ -257,8 +258,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project
-      - restore_cache:
-          keys: [ scan-backend ]
+#      - restore_cache:
+#          keys: [ scan-backend ]
       - run:
           name: install awscli
           command: |
